@@ -19,4 +19,8 @@ def backward_elimination(data):
     return
 
 data_processing("SanityCheck_DataSet__1.txt")
-print(data[0])
+num_features = len(data[0] - 1)
+row_class = int(data[0][0])
+
+def kfold_cross_validation():
+    return
