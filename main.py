@@ -3,6 +3,7 @@ import math
 # https://www.geeksforgeeks.org/python/how-to-read-from-a-file-in-python/
 # https://www.reddit.com/r/learnpython/comments/ynzzum/how_to_convert_scientific_notation_string_to/
 def data_processing(file_name):
+    global data 
     data = []
     with open(file_name, "r") as f:
         for line in f:
@@ -10,7 +11,6 @@ def data_processing(file_name):
             for i in range(len(row)):
                 row[i] = float(row[i])
             data.append(row)
-    return data
 
 # https://www.geeksforgeeks.org/maths/euclidean-distance/
 def calculate_distance(vector1, vector2):
@@ -21,7 +21,7 @@ def calculate_distance(vector1, vector2):
     num = math.sqrt(num)
     return num
 
-def leave_one_out_cross_validation_forward(data, current_features, feature_to_add):
+def leave_one_out_cross_validation_forward(current_features, feature_to_add):
     num_correctly_classified = 0
     features_to_use = current_features.copy()
     features_to_use.append(feature_to_add)
@@ -51,7 +51,7 @@ def leave_one_out_cross_validation_forward(data, current_features, feature_to_ad
     print(f"Using feature(s) {features_to_use} accuracy is {accuracy}")
     return accuracy
 
-def forward_selection(data):
+def forward_selection():
     current_set_of_features = []
     best_accuracies = []
 
@@ -78,7 +78,7 @@ def forward_selection(data):
     print("Finished search")
     print(f"Highest accuracy is {best_accuracies[0][1]} using features {best_accuracies[0][0]}")
 
-def leave_one_out_cross_validation_backward(data, current_features, feature_to_remove=None):
+def leave_one_out_cross_validation_backward(current_features, feature_to_remove=None):
     num_correctly_classified = 0
     features_to_use = current_features.copy()
     if feature_to_remove:
@@ -109,7 +109,7 @@ def leave_one_out_cross_validation_backward(data, current_features, feature_to_r
     print(f"Using feature(s) {features_to_use} accuracy is {accuracy}")
     return accuracy
 
-def backward_elimination(data):
+def backward_elimination():
     current_set_of_features = []
     for i in range(1, len(data[0])):
         current_set_of_features.append(i)
@@ -138,12 +138,10 @@ def backward_elimination(data):
     best_accuracies.sort(key=lambda x: x[1], reverse=True)
     print("Finished Search")
     print(f"Highest accuracy is {best_accuracies[0][1]} using features {best_accuracies[0][0]}")
-    return
 
 def test_algorithim():
     file_name = input("Type in the name of file to test: ")
-    data = data_processing(file_name)
-    num_features = len(data[0])
+    data_processing(file_name)
     print("Type the number of the algorithim you want to run\n")
     print("1) Forward Selection")
     print("2} Backward Elimination\n")
@@ -151,8 +149,6 @@ def test_algorithim():
     while not (user_input == "1" or user_input == "2"):
         print("Unrecognized input, try again")
         user_input = input()
-
-    print(f"\nThis data set has {num_features-1} features (not including the class attribute), with {len(data)} instances.\n")
     
     if user_input == "1":
         forward_selection(data)
