@@ -14,6 +14,7 @@ vector<vector<double>> data;
 double defaultRate;
 
 // https://www.w3schools.com/cpp/cpp_files.asp
+// https://www.geeksforgeeks.org/cpp/processing-strings-using-stdistringstream/
 void data_processing(const string file_name) {
     ifstream filein(file_name);
     string line;
