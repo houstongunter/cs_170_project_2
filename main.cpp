@@ -11,6 +11,7 @@ using namespace std;
 using namespace std::chrono;
 
 vector<vector<double>> data;
+double defaultRate;
 
 // https://www.w3schools.com/cpp/cpp_files.asp
 void data_processing(const string file_name) {
@@ -129,7 +130,8 @@ void forward_selection() {
             cout << ", ";
         } 
     cout << endl;
-    cout << "\nAccuracy at each level:" << endl;
+    cout << "Accuracy at each level:" << endl;
+    cout << "Default rate: " << defaultRate << endl;
     for (int i = 0; i < all_feature_sets.size(); i++) {
         cout << "Level " << i + 1 << ": features ";
         for (int j = 0; j < all_feature_sets[i].size(); j++) {
@@ -227,7 +229,7 @@ void backward_elimination() {
         }
 
          if (best_accuracies.size() > 1) {
-            if (best_so_far_accuracy < best_accuracies[i-1]) {
+            if (best_so_far_accuracy < best_accuracies[i]) {
                 cout << "(Warning, Accuracy has decreased. Continuing search incase of local maxima)" << endl;
             }
         }
@@ -245,7 +247,7 @@ void backward_elimination() {
             cout << ", ";
         } 
     cout << endl;
-    cout << "\nAccuracy at each level:" << endl;
+    cout << "Accuracy at each level:" << endl;
     for (int i = 0; i < all_feature_sets.size(); i++) {
         cout << "Level " << i + 1 << ": features ";
         for (int j = 0; j < all_feature_sets[i].size(); j++) {
@@ -253,13 +255,13 @@ void backward_elimination() {
         }
         cout << "accuracy: " << best_accuracies[i] << endl;
     }
+    cout << "Default rate: " << defaultRate << endl;
 }
 
-double default_rate() {
+void default_rate() {
     int num_1s = 0;
     int num_2s = 0;
     int total = 0;
-    double defaultRate;
     for (int i = 0; i < data.size(); i++) {
         if (data[i][0] == 1) {
             num_1s += 1;
@@ -273,7 +275,6 @@ double default_rate() {
     } else {
         defaultRate = (double)num_2s / (double)total;
     }
-    return defaultRate;
 }
 
     
@@ -282,6 +283,9 @@ int main() {
     cout << "Type in the name of file to test: ";
     cin >> file_name;
     data_processing(file_name);
+
+    int num_instances = data.size();
+    int num_features = data[0].size() - 1;
 
     cout << "Type the number of the algorithm you want to run" << endl;
     cout << "1) Forward Selection" << endl;
@@ -294,16 +298,16 @@ int main() {
         cin >> user_input;
     }
 
+    cout << "There are " << num_instances << " instances in the dataset and " << num_features << " features" << endl;
     // https://www.geeksforgeeks.org/cpp/measure-execution-time-function-cpp/
     auto start = high_resolution_clock::now();
-
-    double defaultRate = default_rate();
-    cout << "Default rate is " << defaultRate << endl;
-
+    default_rate();
     if (user_input == "1") {
+        cout << "Default rate is " << defaultRate << endl;
         forward_selection();
     } else {
         backward_elimination();
+        cout << "Default rate is " << defaultRate << endl;
     }
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<seconds>(stop - start);

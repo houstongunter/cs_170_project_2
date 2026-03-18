@@ -62,7 +62,7 @@ def forward_selection():
         for j in range(1, len(data[0])):
             if j not in current_set_of_features:
                 print(f"--Considering adding the {j} feature")
-                accuracy = leave_one_out_cross_validation_forward(data, current_set_of_features, j)
+                accuracy = leave_one_out_cross_validation_forward(current_set_of_features, j)
                 if accuracy > best_so_far_accuracy:
                     best_so_far_accuracy = accuracy
                     feature_to_add_at_this_level = j
@@ -113,7 +113,7 @@ def backward_elimination():
     current_set_of_features = []
     for i in range(1, len(data[0])):
         current_set_of_features.append(i)
-    accuracy = leave_one_out_cross_validation_backward(data, current_set_of_features)
+    accuracy = leave_one_out_cross_validation_backward(current_set_of_features)
     print("")
     best_accuracies = [[current_set_of_features.copy(), accuracy]]
     for i in range(len(data[0])-2):
@@ -123,7 +123,7 @@ def backward_elimination():
         for j in range(1, len(data[0])):
             if j in current_set_of_features:
                 print(f"--Considering removing feature {j}")
-                accuracy = leave_one_out_cross_validation_backward(data, current_set_of_features, j)
+                accuracy = leave_one_out_cross_validation_backward(current_set_of_features, j)
                 if accuracy > best_so_far_accuracy:
                     best_so_far_accuracy = accuracy
                     feature_to_remove_at_this_level = j
@@ -142,6 +142,7 @@ def backward_elimination():
 def test_algorithim():
     file_name = input("Type in the name of file to test: ")
     data_processing(file_name)
+    num_instances = len(data)
     print("Type the number of the algorithim you want to run\n")
     print("1) Forward Selection")
     print("2} Backward Elimination\n")
@@ -149,11 +150,11 @@ def test_algorithim():
     while not (user_input == "1" or user_input == "2"):
         print("Unrecognized input, try again")
         user_input = input()
-    
+    print(f"There are {num_instances} instances in the dataset and {len(data[0]) - 1} features")
     if user_input == "1":
-        forward_selection(data)
+        forward_selection()
 
     else:
-        backward_elimination(data)
+        backward_elimination()
 
 test_algorithim()
